@@ -64,4 +64,31 @@ public class JobsController extends ApiController {
           });
     }
 
+    @ApiOperation(value = "Launch Job to Update Cow Health (click fail if you want to test exception handling)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/updatehealthjob")
+    public Job launchUpdateCowHealthJob(
+    ) {
+
+        return jobService.runAsJob(ctx -> {
+            ctx.log("Starting to update cow health");
+            ctx.log("This is where the code to update cow health will go.");
+            ctx.log("Cows health is updated!");
+          });
+    }
+
+    @ApiOperation(value = "Launch Job for Instructor Report (click fail if you want to test exception handling)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/instructorreportjob")
+    public Job launchInstructorReportJob(
+    ) {
+
+        return jobService.runAsJob(ctx -> {
+            ctx.log("Starting instructor report");
+            ctx.log("This is where the code for instructor report.");
+            ctx.log("Instructor report completed!");
+          });
+    }
+
+
 }

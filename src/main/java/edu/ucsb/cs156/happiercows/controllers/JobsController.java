@@ -2,6 +2,8 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.ucsb.cs156.happiercows.jobs.CowHealthUpdateJob;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -72,4 +74,23 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(milkTheCowsJob);
     }
 
+    @ApiOperation(value = "Launch Update Cow Health Job (click fail if you want to test exception handling)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/updatecowhealthjob")
+    public Job launchUpdateCowHealthJob(
+    ) {
+
+        CowHealthUpdateJob cowHealthUpdateJob = CowHealthUpdateJob.builder().build();
+        return jobService.runAsJob(cowHealthUpdateJob);
+    }
+
+    @ApiOperation(value = "Launch Instructor Report Job (click fail if you want to test exception handling)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/instructorreportjob")
+    public Job launchInstructorReportJob(
+    ) {
+
+        InstructorReportJob instructorReportJob = InstructorReportJob.builder().build();
+        return jobService.runAsJob(instructorReportJob);
+    }
 }

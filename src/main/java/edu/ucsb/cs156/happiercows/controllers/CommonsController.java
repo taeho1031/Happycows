@@ -61,7 +61,18 @@ public class CommonsController extends ApiController {
   public ResponseEntity<String> getCommons() throws JsonProcessingException {
     log.info("getCommons()...");
     Iterable<Commons> commons = commonsRepository.findAll();
-    String body = mapper.writeValueAsString(commons);
+
+    // convert Iterable to List for the purposes of using a Java Stream & lambda
+    // below
+    List<Commons> commonsList = new ArrayList<Commons>();
+    commons.forEach(commonsList::add);
+
+    for (Commons c : commonsList) {
+        CommonsPlus cPlus = toCommonsPlus(c);
+        c.setTotalPlayers(cPlus.getTotalUsers().intValue());
+    }
+
+    String body = mapper.writeValueAsString(commonsList);
     return ResponseEntity.ok().body(body);
   }
 
@@ -114,6 +125,8 @@ public class CommonsController extends ApiController {
     updated.setShowLeaderboard(params.getShowLeaderboard());
     updated.setDegradationRate(params.getDegradationRate());
 
+    updated.setTotalPlayers(toCommonsPlus(updated).getTotalUsers().intValue());
+
     if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
     }
@@ -131,6 +144,8 @@ public class CommonsController extends ApiController {
 
     Commons commons = commonsRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
+
+    commons.setTotalPlayers(toCommonsPlus(commons).getTotalUsers().intValue());
 
     return commons;
   }
@@ -150,6 +165,7 @@ public class CommonsController extends ApiController {
         .endingDate(params.getEndingDate())
         .degradationRate(params.getDegradationRate())
         .showLeaderboard(params.getShowLeaderboard())
+        .totalPlayers(0)
         .build();
 
     // throw exception for degradation rate

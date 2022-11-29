@@ -33,6 +33,8 @@ public class Commons
   private double degradationRate;
   private boolean showLeaderboard;
 
+  private int totalPlayers;
+
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
   @JoinTable(name = "user_commons",
     joinColumns = @JoinColumn(name = "commons_id", referencedColumnName = "id"),

@@ -76,6 +76,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .totalPlayers(0)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -87,6 +88,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .totalPlayers(0)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -124,6 +126,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .degradationRate(0)
         .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .totalPlayers(0)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -135,6 +138,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .degradationRate(0)
         .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .totalPlayers(0)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -169,6 +173,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .totalPlayers(0)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -178,6 +183,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .totalPlayers(0)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);

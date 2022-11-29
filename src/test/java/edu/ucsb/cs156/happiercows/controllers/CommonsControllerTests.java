@@ -754,4 +754,28 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(actualCommonsPlus, expectedCommonsPlus);
   }
 
+  @WithMockUser(roles = { "USER" })
+  @Test
+  public void getSingleCommonsPlusTest() throws Exception {
+    Commons Commons1 = Commons.builder().name("TestCommons1").id(1L).build();
+
+    CommonsPlus singleCommonsPlus = CommonsPlus.builder()
+        .commons(Commons1)
+        .totalCows(50)
+        .totalUsers(20)
+        .build();
+
+    when(commonsRepository.findById(eq(1L))).thenReturn(Optional.of(Commons1));
+    when(commonsRepository.getNumCows(1L)).thenReturn(Optional.of(50));
+    when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.of(20));
+
+    MvcResult response = mockMvc.perform(get("/api/commons/plus?id=1").contentType("application/json"))
+        .andExpect(status().isOk()).andReturn();
+
+    verify(commonsRepository, times(1)).findById(eq(1L));
+
+    String responseString = response.getResponse().getContentAsString();
+    CommonsPlus actualCommonsPlus = objectMapper.readValue(responseString, CommonsPlus.class);
+    assertEquals(actualCommonsPlus, singleCommonsPlus);
+  }
 }

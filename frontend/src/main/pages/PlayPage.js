@@ -45,7 +45,21 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all 
+  // Stryker enable all
+
+  // Stryker disable all
+    const { data: commonsPlus } =
+      useBackend(
+        [`/api/commons/plus?id=${commonsId}`],
+        {
+          method: "GET",
+          url: "/api/commons/plus",
+          params: {
+            id: commonsId
+          }
+        }
+      );
+    // Stryker enable all
 
   // Stryker disable all 
   const { data: userCommonsProfits } =
@@ -125,7 +139,7 @@ export default function PlayPage() {
       <BasicLayout >
         <Container >
           {!!currentUser && <CommonsPlay currentUser={currentUser} />}
-          {!!commons && <CommonsOverview commons={commons} currentUser={currentUser} />}
+          {!!commonsPlus && <CommonsOverview commonsPlus={commonsPlus} currentUser={currentUser} />}
           <br />
           {!!userCommons &&
             <CardGroup >

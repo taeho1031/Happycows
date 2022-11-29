@@ -136,6 +136,19 @@ public class CommonsController extends ApiController {
     return commons;
   }
 
+  @ApiOperation(value = "Get a specific commons and number of cows/users")
+  @GetMapping("/plus")
+  public ResponseEntity<String> getSingleCommonsPlus(@ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+    log.info("getSingleCommonsPlus()...");
+    Commons commons = commonsRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
+
+    CommonsPlus singleCommonsPlus = toCommonsPlus(commons);
+
+    String body = mapper.writeValueAsString(singleCommonsPlus);
+    return ResponseEntity.ok().body(body);
+  }
+
   @ApiOperation(value = "Create a new commons")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping(value = "/new", produces = "application/json")

@@ -173,6 +173,7 @@ public class CommonsController extends ApiController {
 
     User u = getCurrentUser().getUser();
     Long userId = u.getId();
+    String username = u.getGivenName();
 
     Commons joinedCommons = commonsRepository.findById(commonsId)
         .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));
@@ -189,6 +190,7 @@ public class CommonsController extends ApiController {
         .userId(userId)
         .totalWealth(joinedCommons.getStartingBalance())
         .numOfCows(0)
+        .username(username)
         .build();
 
     userCommonsRepository.save(uc);

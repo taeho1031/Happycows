@@ -778,4 +778,23 @@ public class CommonsControllerTests extends ControllerTestCase {
     CommonsPlus actualCommonsPlus = objectMapper.readValue(responseString, CommonsPlus.class);
     assertEquals(actualCommonsPlus, singleCommonsPlus);
   }
+
+  @WithMockUser(roles = { "USER" })
+  @Test
+  public void getSingleCommonsPlusTest_invalid() throws Exception {
+
+    when(commonsRepository.findById(eq(1L))).thenReturn(Optional.empty());
+    when(commonsRepository.getNumCows(1L)).thenReturn(Optional.empty());
+    when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.empty());
+
+    MvcResult response = mockMvc.perform(get("/api/commons/plus?id=1"))
+        .andExpect(status().is(404)).andReturn();
+
+    verify(commonsRepository, times(1)).findById(eq(1L));
+
+    Map<String, Object> responseMap = responseToJson(response);
+
+    assertEquals(responseMap.get("message"), "Commons with id 1 not found");
+    assertEquals(responseMap.get("type"), "EntityNotFoundException");
+  }
 }

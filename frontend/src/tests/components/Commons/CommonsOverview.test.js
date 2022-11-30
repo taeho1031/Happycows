@@ -6,7 +6,8 @@ import AxiosMockAdapter from "axios-mock-adapter";
 
 import CommonsOverview from "main/components/Commons/CommonsOverview"; 
 import PlayPage from "main/pages/PlayPage";
-import commonsFixtures from "fixtures/commonsFixtures"; 
+//import commonsFixtures from "fixtures/commonsFixtures";
+import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
 import leaderboardFixtures from "fixtures/leaderboardFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
@@ -33,14 +34,17 @@ describe("CommonsOverview tests", () => {
 
     test("renders without crashing", () => {
         render(
-            <CommonsOverview commons={commonsFixtures.oneCommons[0]} />
+            //<CommonsOverview commons={commonsFixtures.oneCommons[0]} />
+            <CommonsOverview commonsPlus={commonsPlusFixtures.oneCommonsPlus[0]} />
         );
     });
 
     test("Redirects to the LeaderboardPage for an admin when you click visit", async () => {
-        apiCurrentUserFixtures.adminUser.user.commons = commonsFixtures.oneCommons[0];
+        //apiCurrentUserFixtures.adminUser.user.commons = commonsFixtures.oneCommons[0];
+        apiCurrentUserFixtures.adminUser.user.commonsPlus = commonsPlusFixtures.oneCommonsPlus;
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
-        axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, commonsFixtures.oneCommons);
+        //axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, commonsFixtures.oneCommons);
+        axiosMock.onGet("/api/commons/plus", {params: {id:4}}).reply(200, commonsPlusFixtures.oneCommonsPlus);
         axiosMock.onGet("/api/leaderboard/all").reply(200, leaderboardFixtures.threeUserCommonsLB);
         render(
             <QueryClientProvider client={queryClient}>
@@ -50,7 +54,7 @@ describe("CommonsOverview tests", () => {
             </QueryClientProvider>
         );
         await waitFor(() => {
-            expect(axiosMock.history.get.length).toEqual(5);
+            expect(axiosMock.history.get.length).toEqual(6);
         });
         expect(await screen.findByTestId("user-leaderboard-button")).toBeInTheDocument();
         const leaderboardButton = screen.getByTestId("user-leaderboard-button");
@@ -59,13 +63,19 @@ describe("CommonsOverview tests", () => {
     });
 
     test("No LeaderboardPage for an ordinary user when commons has showLeaderboard = false", async () => {
-        const ourCommons = {
+        /*const ourCommons = {
             ...commonsFixtures.oneCommons,
             showLeaderboard : false
+        };*/
+        const ourCommons = {
+                    ...commonsPlusFixtures.oneCommonsPlus.commons,
+                    showLeaderboard : false
         };
-        apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons[0];
+        //apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons[0];
+        apiCurrentUserFixtures.userOnly.user.commonsPlus = commonsPlusFixtures.oneCommonsPlus[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, ourCommons);
+        //axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, commonsFixtures.oneCommons);
+        axiosMock.onGet("/api/commons/plus", {params: {id:4}}).reply(200, commonsPlusFixtures.oneCommonsPlus);
         axiosMock.onGet("/api/leaderboard/all").reply(200, leaderboardFixtures.threeUserCommonsLB);
         render(
             <QueryClientProvider client={queryClient}>
@@ -75,7 +85,7 @@ describe("CommonsOverview tests", () => {
             </QueryClientProvider>
         );
         await waitFor(() => {
-            expect(axiosMock.history.get.length).toEqual(3);
+            expect(axiosMock.history.get.length).toEqual(2);
         });
         expect(() => screen.getByTestId("user-leaderboard-button")).toThrow();
     });

@@ -41,6 +41,22 @@ describe("PlayPage tests", () => {
                 name: "Sample Commons"
             }
         ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+                    commons:
+                    {
+                        id: 1,
+                        name: "Sample Commons"
+                    }
+        });
+        axiosMock.onGet("/api/commons/allplus").reply(200, [
+                {
+                     commons:
+                     {
+                         id: 1,
+                         name: "Sample Commons"
+                     }
+                }
+        ]);
         axiosMock.onGet("/api/profits/all/commons").reply(200, []);
         axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
         axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);

@@ -30,6 +30,10 @@ public class UserCommons {
 
   private int numOfCows;
 
+
   private String username;
+
+  private double avgCowHealth;
+
 }
 
